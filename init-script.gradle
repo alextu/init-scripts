@@ -4,6 +4,11 @@ import org.gradle.util.GradleVersion
 
 // conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
+    if (!sourceFile.name.contains(System.getenv('CI_PIPELINE_ID'))) {
+        logger.warn('Init script from another GitlabCI pipeline, skipping it')
+        return
+    }
+
     def isTopLevelBuild = !gradle.parent
     if (!isTopLevelBuild) {
         return
